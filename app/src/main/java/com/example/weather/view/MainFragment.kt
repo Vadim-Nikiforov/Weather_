@@ -9,76 +9,71 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.weather.viewModel.AppState
 import com.example.weather.R
-import com.example.weather.model.Weather
-import com.example.weather.databinding.MainFragmentBinding
 import com.example.weather.viewModel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.example.weather.databinding.MainFragmentBinding
+
 
 class MainFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
-    private lateinit var viewModel: MainViewModel
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: MainViewModel
+    private val adapter = MainFragmentAdapter()
+    private var isDataSetRus: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
+        return binding.getRoot()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val observer = Observer<AppState> { renderData(it) }
-        viewModel.getData().observe(viewLifecycleOwner, observer)
-        viewModel.getWeatherFromRemoteSource()
+        super.onViewCreated(view, savedInstanceState)
+        binding.mainFragmentRecyclerView.adapter = adapter
+        binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.getData().observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.getWeatherFromLocalSourceRus()
     }
 
-    private fun renderData(data: AppState) {
-        when (data) {
+    private fun changeWeatherDataSet() {
+        if (isDataSetRus) {
+            viewModel.getWeatherFromLocalSourceWorld()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+        } else {
+            viewModel.getWeatherFromLocalSourceRus()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+        }
+        isDataSetRus = !isDataSetRus
+    }
+
+    private fun renderData(appState: AppState) {
+        when (appState) {
             is AppState.Success -> {
-                val weatherData = data.weatherData
-                binding.loadingLayout.visibility = View.GONE
-                populateData(weatherData)
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
+                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.main, " ERROR", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") {
-                        viewModel.getWeatherFromRemoteSource()
-                    }.show()
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                Snackbar.make(binding.mainFragmentFAB, "error", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("reload") {
+                        if (isDataSetRus) viewModel.getWeatherFromLocalSourceRus()
+                        else viewModel.getWeatherFromLocalSourceRus()
+                    }
+                    .show()
             }
         }
     }
 
-    private fun populateData(weatherData: Weather) {
-        with(binding) {
-            cityName.text = weatherData.city.city
-            cityCoordinates.text = String.format(
-                getString(R.string.city_coordinates),
-                weatherData.city.lat.toString(),
-                weatherData.city.lon.toString()
-            )
-            temperatureValue.text = weatherData.temperature.toString()
-            feelsLikeValue.text = weatherData.feelsLike.toString()
-        }
+    companion object {
+        fun newInstance() =
+            MainFragment()
     }
 }
