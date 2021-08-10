@@ -28,7 +28,8 @@ class MainViewModel(
                 AppState.Success(
                     if (!isRussian) repositoryImpl.getWeatherFromLocalStorageWorld()
                     else repositoryImpl.getWeatherFromLocalStorageRus()
-                ))
+                )
+            )
         }.start()
     }
 }

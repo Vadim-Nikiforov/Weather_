@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.weather.R
 import com.example.weather.databinding.MainActivityBinding
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
