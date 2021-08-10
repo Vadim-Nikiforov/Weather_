@@ -12,6 +12,7 @@ import com.example.weather.R
 import com.example.weather.viewModel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.example.weather.databinding.MainFragmentBinding
+import com.example.weather.model.Weather
 
 
 class MainFragment : Fragment() {
@@ -20,8 +21,20 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MainViewModel
-    private val adapter = MainFragmentAdapter()
-    private var isDataSetRus: Boolean = false
+    private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
+        override fun onItemViewClick(weather: Weather) {
+            val manager = activity?.supportFragmentManager
+            if (manager != null) {
+                val bundle = Bundle()
+                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
+                manager.beginTransaction()
+                    .add(R.id.container, DetailsFragment.newInstance(bundle))
+                    .addToBackStack("")
+                    .commitAllowingStateLoss()
+            }
+        }
+    })
+    private var isDataSetRus: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,14 +75,16 @@ class MainFragment : Fragment() {
             }
             is AppState.Error -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainFragmentFAB, "error", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("reload") {
-                        if (isDataSetRus) viewModel.getWeatherFromLocalSourceRus()
-                        else viewModel.getWeatherFromLocalSourceRus()
-                    }
+                Snackbar
+                    .make(binding.mainFragmentFAB, "error", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("reload") { viewModel.getWeatherFromLocalSourceRus() }
                     .show()
             }
         }
+    }
+
+    interface OnItemViewClickListener {
+        fun onItemViewClick(weather: Weather)
     }
 
     companion object {
@@ -77,3 +92,4 @@ class MainFragment : Fragment() {
             MainFragment()
     }
 }
+
