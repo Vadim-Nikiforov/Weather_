@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import com.example.weather.viewModel.AppState
 import com.example.weather.R
 import com.example.weather.viewModel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
 import com.example.weather.databinding.MainFragmentBinding
 import com.example.weather.model.Weather
 import kotlinx.android.synthetic.main.fragment_main_recycler_item.*
@@ -43,7 +42,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
-        return binding.getRoot()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,27 +65,18 @@ class MainFragment : Fragment() {
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                binding.mainFragmentLoadingLayout.hide()
                 adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
+                binding.mainFragmentLoadingLayout.show()
             }
             is AppState.Error -> {
-                mainFragmentLoadingLayout.visibility = View.GONE
+                mainFragmentLoadingLayout.hide()
                 mainFragmentRootView.showSnackBar("error", "reload",
                     { viewModel.getWeatherFromLocalSourceRus() })
             }
         }
-    }
-
-    private fun View.showSnackBar(
-        text: String,
-        actionText: String,
-        action: (View) -> Unit,
-        length: Int = Snackbar.LENGTH_INDEFINITE
-    ) {
-        Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
     interface OnItemViewClickListener {
