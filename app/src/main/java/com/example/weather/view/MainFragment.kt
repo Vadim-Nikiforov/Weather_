@@ -65,14 +65,14 @@ class MainFragment : Fragment() {
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                binding.mainFragmentLoadingLayout.hide()
+                binding.loadingLayout.hide()
                 adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.mainFragmentLoadingLayout.show()
+                binding.loadingLayout.show()
             }
             is AppState.Error -> {
-                mainFragmentLoadingLayout.hide()
+                loadingLayout.hide()
                 mainFragmentRootView.showSnackBar("error", "reload",
                     { viewModel.getWeatherFromLocalSourceRus() })
             }
