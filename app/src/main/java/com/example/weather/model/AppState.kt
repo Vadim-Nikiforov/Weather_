@@ -1,6 +1,4 @@
-package com.example.weather.viewModel
-
-import com.example.weather.model.Weather
+package com.example.weather.model
 
 sealed class AppState {
     data class Success(val weatherData: List<Weather>) : AppState()

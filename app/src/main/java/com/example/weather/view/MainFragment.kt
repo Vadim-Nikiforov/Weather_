@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.example.weather.viewModel.AppState
+import com.example.weather.model.AppState
 import com.example.weather.R
 import com.example.weather.viewModel.MainViewModel
 import com.example.weather.databinding.MainFragmentBinding
 import com.example.weather.model.Weather
-import kotlinx.android.synthetic.main.fragment_main_recycler_item.*
 import kotlinx.android.synthetic.main.main_fragment.*
 
 
@@ -62,19 +61,21 @@ class MainFragment : Fragment() {
             mainFragmentFAB.setImageResource(R.drawable.ic_russia)
         }.also { isDataSetRus = !isDataSetRus }
 
-    private fun renderData(appState: AppState) {
-        when (appState) {
+    private fun renderData(data: AppState) {
+        when (data) {
             is AppState.Success -> {
                 binding.loadingLayout.hide()
-                adapter.setWeather(appState.weatherData)
+                adapter.setWeather(data.weatherData)
             }
             is AppState.Loading -> {
                 binding.loadingLayout.show()
             }
             is AppState.Error -> {
-                loadingLayout.hide()
-                mainFragmentRootView.showSnackBar("error", "reload",
-                    { viewModel.getWeatherFromLocalSourceRus() })
+                binding.loadingLayout.hide()
+                binding.mainFragmentFAB.showSnackBar("Error", "Reload") {
+                    if (isDataSetRus) viewModel.getWeatherFromLocalSourceRus()
+                    else viewModel.getWeatherFromLocalSourceWorld()
+                }
             }
         }
     }
