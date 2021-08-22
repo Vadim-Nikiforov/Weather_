@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.weather.R
+import com.example.weather.contact.main.MainFragment
 import com.example.weather.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(binding.container.id, MainFragment.newInstance())
+                .replace(binding.container.id, MainFragmentWeather.newInstance())
                 .commitNow()
         }
     }
@@ -33,6 +34,16 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .add(R.id.container, HistoryFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+
+            R.id.contact -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, MainFragment.newInstance())
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }

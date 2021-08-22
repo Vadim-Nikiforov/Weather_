@@ -14,7 +14,6 @@ class App : Application() {
     }
 
     companion object {
-
         private var appInstance: App? = null
         private var db: HistoryDataBase? = null
         private const val DB_NAME = "History.db"
@@ -38,3 +37,4 @@ class App : Application() {
         }
     }
 }
+

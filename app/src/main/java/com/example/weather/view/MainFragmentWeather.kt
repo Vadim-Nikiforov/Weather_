@@ -7,20 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.example.weather.model.AppState
 import com.example.weather.R
 import com.example.weather.viewModel.MainViewModel
-import com.example.weather.databinding.MainFragmentBinding
+import com.example.weather.databinding.MainFragmentWeatherBinding
 import com.example.weather.model.Weather
-import kotlinx.android.synthetic.main.main_fragment.*
 
 private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
 
-class MainFragment : Fragment() {
+class MainFragmentWeather : Fragment() {
 
     private var isDataSetWorld: Boolean = false
-    private var _binding: MainFragmentBinding? = null
+    private var _binding: MainFragmentWeatherBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
@@ -43,7 +41,7 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = MainFragmentBinding.inflate(inflater, container, false)
+        _binding = MainFragmentWeatherBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -113,7 +111,7 @@ class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() =
-            MainFragment()
+            MainFragmentWeather()
     }
 }
 
