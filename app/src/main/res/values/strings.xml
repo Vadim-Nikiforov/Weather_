@@ -6,4 +6,6 @@
     <string name="error">Ошибка</string>
     <string name="reload">Перегрузить</string>
     <string name="menu_title_history">История</string>
+    <string name="textView_history">История</string>
+    <string name="textView_contact">контакты</string>
 </resources>

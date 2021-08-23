@@ -1,6 +1,7 @@
 package com.example.weather.app
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.weather.room.HistoryDao
 import com.example.weather.room.HistoryDataBase
@@ -11,9 +12,11 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appInstance = this
+        context = applicationContext
     }
 
     companion object {
+        lateinit var context: Context
         private var appInstance: App? = null
         private var db: HistoryDataBase? = null
         private const val DB_NAME = "History.db"
@@ -32,9 +35,15 @@ class App : Application() {
                     }
                 }
             }
-
             return db!!.historyDao()
         }
     }
 }
+interface IContextProvider{
+    val context: Context
+}
 
+object ContextProvider: IContextProvider{
+    override val context: Context
+        get() = App.context
+}

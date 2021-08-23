@@ -3,8 +3,8 @@ package com.example.weather.contact.repository
 import android.content.ContentResolver
 import android.database.Cursor
 import android.provider.ContactsContract
-import com.example.weather.contact.ContextProvider
-import com.example.weather.contact.IContextProvider
+import com.example.weather.app.ContextProvider
+import com.example.weather.app.IContextProvider
 
 class RepositoryContactImpl(contextProvider: IContextProvider = ContextProvider) :
     RepositoryContact {

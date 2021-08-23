@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             R.id.contact -> {
                 supportFragmentManager.apply {
                     beginTransaction()
-                        .add(R.id.container, MainFragment.newInstance())
+                        .replace(R.id.container, MainFragment.newInstance())
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }
