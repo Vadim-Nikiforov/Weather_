@@ -7,6 +7,7 @@ import android.view.MenuItem
 import com.example.weather.R
 import com.example.weather.contact.main.MainFragment
 import com.example.weather.databinding.MainActivityBinding
+import com.example.weather.map.MapsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +45,15 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .replace(R.id.container, MainFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            R.id.map -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, MapsFragment.newInstance())
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }
